@@ -33,6 +33,7 @@ def test_init_with_existing_custom_config(run_command, data_dir, working_dir, do
     configs = yaml.load(config_file.read(), Loader=yaml.FullLoader)
     config_file.close()
     assert ["https://example.com"] == configs["board_manager"]["additional_urls"]
+    assert ["packages/package_index.json"] == configs["board_manager"]["additional_paths"]
     assert "50051" == configs["daemon"]["port"]
     assert data_dir == configs["directories"]["data"]
     assert downloads_dir == configs["directories"]["downloads"]
@@ -53,6 +54,7 @@ def test_init_with_existing_custom_config(run_command, data_dir, working_dir, do
     configs = yaml.load(config_file.read(), Loader=yaml.FullLoader)
     config_file.close()
     assert [] == configs["board_manager"]["additional_urls"]
+    assert [] == configs["board_manager"]["additional_paths"]
     assert "50051" == configs["daemon"]["port"]
     assert data_dir == configs["directories"]["data"]
     assert downloads_dir == configs["directories"]["downloads"]
@@ -73,6 +75,7 @@ def test_init_overwrite_existing_custom_file(run_command, data_dir, working_dir,
     configs = yaml.load(config_file.read(), Loader=yaml.FullLoader)
     config_file.close()
     assert ["https://example.com"] == configs["board_manager"]["additional_urls"]
+    assert ["packages/package_index.json"] == configs["board_manager"]["additional_paths"]
     assert "50051" == configs["daemon"]["port"]
     assert data_dir == configs["directories"]["data"]
     assert downloads_dir == configs["directories"]["downloads"]
@@ -91,6 +94,7 @@ def test_init_overwrite_existing_custom_file(run_command, data_dir, working_dir,
     configs = yaml.load(config_file.read(), Loader=yaml.FullLoader)
     config_file.close()
     assert [] == configs["board_manager"]["additional_urls"]
+    assert [] == configs["board_manager"]["additional_paths"]
     assert "50051" == configs["daemon"]["port"]
     assert data_dir == configs["directories"]["data"]
     assert downloads_dir == configs["directories"]["downloads"]
@@ -194,6 +198,7 @@ def test_dump(run_command, data_dir, working_dir):
     assert result.ok
     settings_json = json.loads(result.stdout)
     assert [] == settings_json["board_manager"]["additional_urls"]
+    assert [] == settings_json["board_manager"]["additional_paths"]
 
     result = run_command('config init --additional-urls "https://example.com"')
     assert result.ok
@@ -205,6 +210,7 @@ def test_dump(run_command, data_dir, working_dir):
     assert result.ok
     settings_json = json.loads(result.stdout)
     assert ["https://example.com"] == settings_json["board_manager"]["additional_urls"]
+    assert ["packages/package_index.json"] == settings_json["board_manager"]["additional_paths"]
 
 
 def test_dump_with_config_file_flag(run_command, working_dir):
@@ -219,6 +225,7 @@ def test_dump_with_config_file_flag(run_command, working_dir):
     assert result.ok
     settings_json = json.loads(result.stdout)
     assert ["https://example.com"] == settings_json["board_manager"]["additional_urls"]
+    assert ["packages/package_index.json"] == settings_json["board_manager"]["additional_paths"]
 
     result = run_command(
         f'config dump --config-file "{config_file}" --additional-urls=https://another-url.com --format json'
@@ -226,3 +233,4 @@ def test_dump_with_config_file_flag(run_command, working_dir):
     assert result.ok
     settings_json = json.loads(result.stdout)
     assert ["https://another-url.com"] == settings_json["board_manager"]["additional_urls"]
+    assert ["packages/package_new_index.json"] == settings_json["board_manager"]["additional_paths"]

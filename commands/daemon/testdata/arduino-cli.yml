@@ -2,6 +2,8 @@ board_manager:
   additional_urls:
     - http://foobar.com
     - http://example.com
+  additional_paths:
+    - packages/package_index.json
 
 daemon:
   port: "50051"
