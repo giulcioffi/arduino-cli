@@ -233,4 +233,4 @@ def test_dump_with_config_file_flag(run_command, working_dir):
     assert result.ok
     settings_json = json.loads(result.stdout)
     assert ["https://another-url.com"] == settings_json["board_manager"]["additional_urls"]
-    assert ["packages/package_new_index.json"] == settings_json["board_manager"]["additional_paths"]
+    assert [""] == settings_json["board_manager"]["additional_paths"]
