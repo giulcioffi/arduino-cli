@@ -32,9 +32,9 @@ import (
 	"github.com/arduino/arduino-cli/legacy/builder/utils"
 )
 
-var VALID_EXPORT_EXTENSIONS = map[string]bool{".h": true, ".c": true, ".hpp": true, ".hh": true, ".cpp": true, ".S": true, ".a": true, ".properties": true}
+var VALID_EXPORT_EXTENSIONS = map[string]bool{".h": true, ".c": true, ".hpp": true, ".hh": true, ".cpp": true, ".S": true, ".so": true, ".properties": true}
 var DOTHEXTENSION = map[string]bool{".h": true, ".hh": true, ".hpp": true}
-var DOTAEXTENSION = map[string]bool{".a": true}
+var DOTAEXTENSION = map[string]bool{".so": true}
 
 type ExportProjectCMake struct {
 	// Was there an error while compiling the sketch?
@@ -214,7 +214,7 @@ func (s *ExportProjectCMake) Run(ctx *types.Context) error {
 		// Static libraries are fully configured
 		lib := filepath.Base(staticLib)
 		lib = strings.TrimPrefix(lib, "lib")
-		lib = strings.TrimSuffix(lib, ".a")
+		lib = strings.TrimSuffix(lib, ".so")
 		if !utils.SliceContains(dynamicLibsFromGccMinusL, lib) {
 			linkGroup += " " + lib
 			cmakelist += "add_library (" + lib + " STATIC IMPORTED)\n"

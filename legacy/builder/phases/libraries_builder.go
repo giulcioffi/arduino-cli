@@ -194,7 +194,7 @@ func compileLibrary(ctx *types.Context, library *libraries.Library, buildPath *p
 			return nil, errors.WithStack(err)
 		}
 		if library.DotALinkage {
-			archiveFile, err := builder_utils.ArchiveCompiledFiles(ctx, libraryBuildPath, paths.New(library.Name+".a"), libObjectFiles, buildProperties)
+			archiveFile, err := builder_utils.ArchiveCompiledFiles(ctx, libraryBuildPath, paths.New(library.Name+".so"), libObjectFiles, buildProperties)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}

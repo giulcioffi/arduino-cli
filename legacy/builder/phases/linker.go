@@ -80,25 +80,48 @@ func link(ctx *types.Context, objectFiles paths.PathList, coreDotARelPath *paths
 		for _, object := range objectFiles {
 			if object.HasSuffix(".a") {
 				archives.Add(object)
-				continue
-			}
-			archive := object.Parent().Join("objs.a")
-			if !archives.Contains(archive) {
-				archives.Add(archive)
-				// Cleanup old archives
-				_ = archive.Remove()
-			}
-			properties.Set("archive_file", archive.Base())
-			properties.SetPath("archive_file_path", archive)
-			properties.SetPath("object_file", object)
 
-			command, err := builder_utils.PrepareCommandForRecipe(properties, constants.RECIPE_AR_PATTERN, false)
-			if err != nil {
-				return errors.WithStack(err)
+				archive := object.Parent().Join("objs.a")
+				if !archives.Contains(archive) {
+					archives.Add(archive)
+					// Cleanup old archives
+					_ = archive.Remove()
+				}
+				properties.Set("archive_file", archive.Base())
+				properties.SetPath("archive_file_path", archive)
+				properties.SetPath("object_file", object)
+
+				command, err := builder_utils.PrepareCommandForRecipe(properties, constants.RECIPE_SHARED_PATTERN, false)
+				if err != nil {
+					return errors.WithStack(err)
+				}
+
+				if _, _, err := utils.ExecCommand(ctx, command, utils.ShowIfVerbose /* stdout */, utils.Show /* stderr */); err != nil {
+					return errors.WithStack(err)
+				}
 			}
 
-			if _, _, err := utils.ExecCommand(ctx, command, utils.ShowIfVerbose /* stdout */, utils.Show /* stderr */); err != nil {
-				return errors.WithStack(err)
+			if object.HasSuffix(".so") {
+				archives.Add(object)
+
+				archive := object.Parent().Join("objs.so")
+				if !archives.Contains(archive) {
+					archives.Add(archive)
+					// Cleanup old archives
+					_ = archive.Remove()
+				}
+				properties.Set("archive_file", archive.Base())
+				properties.SetPath("archive_file_path", archive)
+				properties.SetPath("object_file", object)
+
+				command, err := builder_utils.PrepareCommandForRecipe(properties, constants.RECIPE_SHARED_PATTERN, false)
+				if err != nil {
+					return errors.WithStack(err)
+				}
+
+				if _, _, err := utils.ExecCommand(ctx, command, utils.ShowIfVerbose /* stdout */, utils.Show /* stderr */); err != nil {
+					return errors.WithStack(err)
+				}
 			}
 		}
 

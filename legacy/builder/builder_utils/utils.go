@@ -457,6 +457,7 @@ func TXTBuildRulesHaveChanged(corePath, targetCorePath, targetFile *paths.Path) 
 func ArchiveCompiledFiles(ctx *types.Context, buildPath *paths.Path, archiveFile *paths.Path, objectFilesToArchive paths.PathList, buildProperties *properties.Map) (*paths.Path, error) {
 	logger := ctx.GetLogger()
 	archiveFilePath := buildPath.JoinPath(archiveFile)
+	//sharedFilePath := buildPath.JoinPath(archiveFile)
 
 	if ctx.OnlyUpdateCompilationDatabase {
 		if ctx.Verbose {
@@ -495,7 +496,7 @@ func ArchiveCompiledFiles(ctx *types.Context, buildPath *paths.Path, archiveFile
 		properties.SetPath(constants.BUILD_PROPERTIES_ARCHIVE_FILE_PATH, archiveFilePath)
 		properties.SetPath(constants.BUILD_PROPERTIES_OBJECT_FILE, objectFile)
 
-		command, err := PrepareCommandForRecipe(properties, constants.RECIPE_AR_PATTERN, false)
+		command, err := PrepareCommandForRecipe(properties, constants.RECIPE_SHARED_PATTERN, false)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}

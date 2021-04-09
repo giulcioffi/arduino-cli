@@ -112,7 +112,7 @@ func compileCore(ctx *types.Context, buildPath *paths.Path, buildCachePath *path
 		return nil, nil, errors.WithStack(err)
 	}
 
-	archiveFile, err := builder_utils.ArchiveCompiledFiles(ctx, buildPath, paths.New("core.a"), coreObjectFiles, buildProperties)
+	archiveFile, err := builder_utils.ArchiveCompiledFiles(ctx, buildPath, paths.New("core.so"), coreObjectFiles, buildProperties)
 	if err != nil {
 		return nil, nil, errors.WithStack(err)
 	}
@@ -143,10 +143,10 @@ func GetCachedCoreArchiveFileName(fqbn string, optimizationFlags string, coreFol
 		coreFolder = absCoreFolder
 	} // silently continue if absolute path can't be detected
 	hash := utils.MD5Sum([]byte(coreFolder.String() + optimizationFlags))
-	realName := "core_" + fqbnToUnderscore + "_" + hash + ".a"
+	realName := "core_" + fqbnToUnderscore + "_" + hash + ".so"
 	if len(realName) > 100 {
 		// avoid really long names, simply hash the final part
-		realName = "core_" + utils.MD5Sum([]byte(fqbnToUnderscore+"_"+hash)) + ".a"
+		realName = "core_" + utils.MD5Sum([]byte(fqbnToUnderscore+"_"+hash)) + ".so"
 	}
 	return realName
 }
